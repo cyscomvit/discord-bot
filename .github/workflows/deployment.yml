@@ -20,11 +20,9 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
-            whoami
-            echo ${{ github.event.repository.name  }}
             cd ./deploy/${{ github.event.repository.name }}
             git pull
-            docker rm --force ${{ github.event.repository.name  }}-deploy
+            docker rm --force ${{ github.event.repository.name  }}-deploy || true
             docker build -t ${{ github.event.repository.owner.name }}/${{ github.event.repository.name  }}:${{ github.sha }} --quiet .
             docker run --detach --name ${{ github.event.repository.name  }}-deploy ${{ github.event.repository.owner.name }}/${{ github.event.repository.name  }}:${{ github.sha }}
             docker container prune --force && docker image prune --all --force
