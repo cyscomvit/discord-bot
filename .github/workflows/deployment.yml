@@ -26,7 +26,8 @@ jobs:
           script: |
             cd ./deploy/${{ github.event.repository.name }}
             git pull
-            docker rm --force ${{ github.event.repository.name  }}-deploy || true
+            docker rm --force ${{ github.event.repository.name  }}-deploy 2> /dev/null
             docker build -t ${{ github.event.repository.owner.name }}/${{ github.event.repository.name  }}:${{ env.COMMIT_SHORT_SHA }} --quiet .
             docker run --detach --name ${{ github.event.repository.name  }}-deploy ${{ github.event.repository.owner.name }}/${{ github.event.repository.name  }}:${{ env.COMMIT_SHORT_SHA }}
             docker container prune --force && docker image prune --all --force
+
