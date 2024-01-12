@@ -1,0 +1,35 @@
+name: Update requirements.txt from poetry.lock
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  update-requirements:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.1"
+      - name: Install poetry
+        run: |
+          pip install "poetry>=1.7,<1.8"
+          poetry self add poetry-plugin-export
+      - name: Update dependencies and commit to remote
+        run: |
+          poetry export --format requirements.txt --output requirements.txt
+          git config user.name cyscom-github-actions
+          git config user.email cyscom-github-actions@cyscom.com
+          git add requirements.txt
+          if [ git diff --cached --exit-code ]; then
+            echo "Files have changed!"
+            git commit -m "Updated dependencies in requirements.txt file at $(TZ=":Asia/Calcutta" date +"%d/%m/%y %r") IST"
+            git push
+          else
+            echo "requirements.txt" has not changed
+          fi

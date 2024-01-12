@@ -1,0 +1,38 @@
+name: Deploying to VPS
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: SSH setup and run commands
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_KEY }}
+          username: ${{ secrets.SSH_USER }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            whoami
+            echo ${{ github.event.repository.name  }}
+            cd ./deploy/${{ github.event.repository.name }}
+            git pull
+            docker rm --force ${{ github.event.repository.name  }}-deploy
+            cd ../
+            if test -f docker-compose.yml; then
+              docker compose build
+              docker compose up --detach
+              echo "Build and deployed container"
+            else
+              echo "Docker compose file not found"
+              docker build -t cyscomvit/${{ github.event.repository.name  }}:latest .
+              docker run --detach --name ${{ github.event.repository.name  }}-deploy cyscomvit/${{ github.event.repository.name  }}:latest
+            fi
+            docker-clean
