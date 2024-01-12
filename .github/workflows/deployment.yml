@@ -29,10 +29,10 @@ jobs:
             if test -f docker-compose.yml; then
               docker compose build
               docker compose up --detach
-              echo "Build and deployed container"
+              echo "Built and deployed container"
             else
               echo "Docker compose file not found"
               docker build -t cyscomvit/${{ github.event.repository.name  }}:latest .
               docker run --detach --name ${{ github.event.repository.name  }}-deploy cyscomvit/${{ github.event.repository.name  }}:latest
             fi
-            docker-clean
+            docker container prune --force && docker image prune --all --force
