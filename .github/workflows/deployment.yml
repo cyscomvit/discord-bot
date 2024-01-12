@@ -15,7 +15,7 @@ jobs:
       - name: Calculate short hash
         run: |
           shortHash=$(git rev-parse --short ${{ github.sha }})
-          echo "COMMIT_SHORT_SHA=$hash" >> $GITHUB_ENV
+          echo "COMMIT_SHORT_SHA=$shortHash" >> $GITHUB_ENV
       - name: SSH setup and run commands
         uses: appleboy/ssh-action@v1.0.3
         with:
