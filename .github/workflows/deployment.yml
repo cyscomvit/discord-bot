@@ -27,7 +27,7 @@ jobs:
             docker rm --force ${{ github.event.repository.name  }}-deploy
             cd ../
             if test -f docker-compose.yml; then
-              docker compose build
+              docker compose build --quiet
               docker compose up --detach
               echo "Built and deployed container"
             else
