@@ -32,7 +32,7 @@ jobs:
               echo "Built and deployed container"
             else
               echo "Docker compose file not found"
-              docker build -t cyscomvit/${{ github.event.repository.name  }}:latest .
+              docker build -t cyscomvit/${{ github.event.repository.name  }}:latest --quiet .
               docker run --detach --name ${{ github.event.repository.name  }}-deploy cyscomvit/${{ github.event.repository.name  }}:latest
             fi
             docker container prune --force && docker image prune --all --force
