@@ -1,8 +1,8 @@
-FROM python:3.11.7-slim AS base-image
+FROM python:3.11.7-slim AS requirements-image
 
 ENV PYTHONUNBUFFERED=1
 
-RUN ["pip","install","poetry>=1.7,<1.8","--upgrade"]
+RUN ["pip","install","poetry>=1.7,<1.8"]
 
 RUN ["poetry","self","add","poetry-plugin-export"]
 
@@ -16,13 +16,15 @@ FROM python:3.11.7-slim AS runtime-image
 
 LABEL description="CYSCOM VIT's discord bot"
 
-COPY --from=base-image /export/requirements.txt requirements.txt
+ENV PYTHONUNBUFFERED=1
+
+COPY --from=requirements-image /export/requirements.txt requirements.txt
 
 RUN ["useradd","--create-home","cyscom-docker"]
 
 USER cyscom-docker
 
-RUN ["pip","install","--requirement","requirements.txt"]
+RUN ["pip","install","--user","--requirement","requirements.txt"]
 
 WORKDIR /home/cyscom-docker/discord-bot
 

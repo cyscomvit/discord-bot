@@ -1,8 +1,8 @@
-from os import getenv, listdir, environ
+from distutils.command.check import check
+from os import environ, getenv, listdir
 from os.path import dirname
 
 import discord
-from distutils.command.check import check
 import requests
 from discord.ext import commands
 from dotenv import load_dotenv
