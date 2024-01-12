@@ -23,6 +23,6 @@ jobs:
             cd ./deploy/${{ github.event.repository.name }}
             git pull
             docker rm --force ${{ github.event.repository.name  }}-deploy || true
-            docker build -t ${{ github.event.repository.owner.name }}/${{ github.event.repository.name  }}:${{ github.sha }} --quiet .
-            docker run --detach --name ${{ github.event.repository.name  }}-deploy ${{ github.event.repository.owner.name }}/${{ github.event.repository.name  }}:${{ github.sha }}
+            docker build -t ${{ github.event.repository.owner.name }}/${{ github.event.repository.name  }}:$(git rev-parse --short HEAD) --quiet .
+            docker run --detach --name ${{ github.event.repository.name  }}-deploy ${{ github.event.repository.owner.name }}/${{ github.event.repository.name  }}:$(git rev-parse --short HEAD)
             docker container prune --force && docker image prune --all --force
