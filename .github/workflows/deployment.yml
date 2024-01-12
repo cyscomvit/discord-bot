@@ -12,6 +12,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+      - name: Calculate short hash
+        run: |
+          shortHash=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$hash" >> $GITHUB_ENV
       - name: SSH setup and run commands
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -23,6 +27,6 @@ jobs:
             cd ./deploy/${{ github.event.repository.name }}
             git pull
             docker rm --force ${{ github.event.repository.name  }}-deploy || true
-            docker build -t ${{ github.event.repository.owner.name }}/${{ github.event.repository.name  }}:$(git rev-parse --short HEAD) --quiet .
-            docker run --detach --name ${{ github.event.repository.name  }}-deploy ${{ github.event.repository.owner.name }}/${{ github.event.repository.name  }}:$(git rev-parse --short HEAD)
+            docker build -t ${{ github.event.repository.owner.name }}/${{ github.event.repository.name  }}:${{ env.COMMIT_SHORT_SHA }} --quiet .
+            docker run --detach --name ${{ github.event.repository.name  }}-deploy ${{ github.event.repository.owner.name }}/${{ github.event.repository.name  }}:${{ env.COMMIT_SHORT_SHA }}
             docker container prune --force && docker image prune --all --force
