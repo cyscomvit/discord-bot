@@ -8,6 +8,10 @@ COPY requirements.txt requirements.txt
 
 RUN ["pip","install","-r","requirements.txt"]
 
+RUN useradd --create-home cyscom-docker
+
+WORKDIR /home/cyscom-docker/discord-bot
+
 WORKDIR /discord-bot
 
 COPY . .
