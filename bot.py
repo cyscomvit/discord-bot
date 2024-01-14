@@ -49,7 +49,7 @@ current_act = getenv("CURRENT_ACT") if getenv("CURRENT_ACT") else 6
 """The current leaderboard act"""
 
 
-leaderboard_ref = db.reference("vitcc").child("owasp").child(current_act)
+leaderboard_ref = db.reference("vitcc").child("owasp").child(f"leaderboard-act{current_act}")
 
 # project_ref = base_ref.child("projects")
 # certificate_ref = base_ref.child("certificates")
@@ -122,8 +122,8 @@ async def sum(ctx, numOne: int, numTwo: int):
 
 @bot.command()
 @commands.has_any_role("Cabinet Member")
-async def add_data(ctx, name: str, rating: int = 0, contributions: int = 0):
-    f"""Add data to the leaderboard. Call it by {command_prefix} add_data "name" rating contribution"""
+async def add_member(ctx, name: str, rating: int = 0, contributions: int = 0):
+    f"""Add data to the leaderboard. Call it by {command_prefix} add_member "name" rating contribution"""
     try:
         data = leaderboard_ref.get()
         name = name.strip()
@@ -201,6 +201,7 @@ async def add_recruits(ctx):
 @bot.command()
 @commands.has_any_role("Cabinet Member")
 async def set_points(ctx, name: str, rating=0, contributions=0):
+    f"""Specifically set a member's points. Call it by {command_prefix} set_points "name" rating contribution"""
     try:
         data = leaderboard_ref.get()
         name = name.strip()
