@@ -1,9 +1,9 @@
 from distutils.command.check import check
 from os import environ, getenv, listdir
 from os.path import dirname
+from requests import get as requests_get
 
 import discord
-import requests
 from discord.ext import commands
 from dotenv import load_dotenv
 from firebase_admin import credentials, db, initialize_app
@@ -104,7 +104,7 @@ async def ping(ctx):
 async def doge(ctx):
     """Return a doge pic"""
     try:
-        doge_pic_url = requests.get(
+        doge_pic_url = requests_get(
             "https://shibe.online/api/shibes?count=1&urls=true"
         ).json()[0]
         await ctx.send(doge_pic_url)
@@ -121,7 +121,7 @@ async def sum(ctx, numOne: int, numTwo: int):
 
 
 @bot.command()
-@commands.has_any_role("Board Member")
+@commands.has_any_role("Cabinet Member")
 async def add_data(ctx, name: str, rating: int = 0, contributions: int = 0):
     f"""Add data to the leaderboard. Call it by {command_prefix} add_data "name" rating contribution"""
     try:
@@ -172,7 +172,7 @@ async def add_data(ctx, name: str, rating: int = 0, contributions: int = 0):
 
 
 @bot.command()
-@commands.has_any_role("Board Member")
+@commands.has_any_role("Cabinet Member")
 async def add_recruits(ctx):
     f"""Add recruits by reading a members.txt file present in the same folder"""
     # Place file in discord-bot folder.
@@ -199,8 +199,8 @@ async def add_recruits(ctx):
 
 
 @bot.command()
-@commands.has_any_role("Board Member")
-async def update_data(ctx, name: str, rating=0, contributions=0):
+@commands.has_any_role("Cabinet Member")
+async def set_points(ctx, name: str, rating=0, contributions=0):
     try:
         data = leaderboard_ref.get()
         name = name.strip()
@@ -238,7 +238,7 @@ async def update_data(ctx, name: str, rating=0, contributions=0):
 
 
 @bot.command()
-@commands.has_any_role("Member", "Board Member")
+@commands.has_any_role("Member", "Cabinet Member")
 async def fetch_data(ctx, name):
     """Fetch data from the leaderboard"""
     try:
@@ -260,7 +260,7 @@ async def fetch_data(ctx, name):
 
 
 @bot.command()
-@commands.has_any_role("Board Member")
+@commands.has_any_role("Cabinet Member")
 async def delete_data(ctx, name):
     """Delete someone from the leaderboard"""
     try:
@@ -278,7 +278,7 @@ async def delete_data(ctx, name):
 
 
 @bot.command()
-@commands.has_any_role("Leaderboard", "Board Member")
+@commands.has_any_role("Leaderboard", "Cabinet Member")
 async def contribution(ctx, name, task):
     """Add contribution to a member"""
     try:
@@ -403,6 +403,19 @@ async def on_message(message):
     elif "cyscom website" in message.content.lower():
         await message.channel.send("Our Website is https://cyscomvit.com")
         await bot.process_commands(message)
+
+
+def add_members_to_act(
+    act_num: int,
+    member_names: list[str],
+    discord_roles: list[str],
+    add_roles_to_discord: bool = False,
+):
+    ...
+
+
+def fetch_spreadsheet(speadsheet_id: str):
+    ...
 
 
 bot.run(getenv("BOT_TOKEN"))

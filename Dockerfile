@@ -1,4 +1,4 @@
-FROM python:3.11.7-slim AS requirements-image
+FROM python:3.11-slim AS requirements-image
 
 ENV PYTHONUNBUFFERED=1
 
@@ -12,7 +12,7 @@ COPY pyproject.toml poetry.lock ./
 
 RUN ["poetry","export","--format","requirements.txt","--output","requirements.txt"]
 
-FROM python:3.11.7-slim AS runtime-image
+FROM python:3.11-slim AS runtime-image
 
 LABEL description="CYSCOM VIT's discord bot"
 
