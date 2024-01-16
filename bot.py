@@ -29,7 +29,7 @@ def check_if_required_env_variables_are_present():
     }
     if not all(env in environ for env in required_env_variables):
         raise RuntimeError(
-            f"The following required environmental variables have not been set - {(x for x in required_env_variables if x not in environ)}. Refer to code and Readme.MD for seeing what env keys are needed"
+            f"The following required environmental variables have not been set - {list(x for x in required_env_variables if x not in environ)}. Refer to code and Readme.MD for seeing what env keys are needed"
         )
 
 
