@@ -27,6 +27,6 @@ jobs:
             cd ./deploy/${{ github.event.repository.name }}
             git pull
             docker rm --force ${{ github.event.repository.name  }}-deploy 2> /dev/null
-            docker build -t ${{ GITHUB_REPOSITORY  }}:${{ env.COMMIT_SHORT_SHA }} --quiet .
-            docker run --detach --publish 5000:5000 --name ${{ github.event.repository.name  }}-deploy ${{ env.GITHUB_REPOSITORY  }}:${{ env.COMMIT_SHORT_SHA }}
+            docker build -t ${{ github.repository }}:${{ env.COMMIT_SHORT_SHA }} --quiet .
+            docker run --detach --publish 5000:5000 --name ${{ github.event.repository.name  }}-deploy ${{ github.repository }}:${{ env.COMMIT_SHORT_SHA }}
             docker container prune --force && docker image prune --all --force
