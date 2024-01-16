@@ -25,10 +25,11 @@ def check_if_required_env_variables_are_present():
         "FIREBASE_DB",
         "FIREBASE_STORAGE",
         "BOT_TOKEN",
+        "ROOT_USERS",
     }
     if not all(env in environ for env in required_env_variables):
         raise RuntimeError(
-            f"The following required environmental variables have not been set - {(x for x in required_env_variables if x not in environ)}"
+            f"The following required environmental variables have not been set - {(x for x in required_env_variables if x not in environ)}. Refer to code and Readme.MD for seeing what env keys are needed"
         )
 
 
@@ -49,7 +50,9 @@ current_act = getenv("CURRENT_ACT") if getenv("CURRENT_ACT") else 6
 """The current leaderboard act"""
 
 
-leaderboard_ref = db.reference("vitcc").child("owasp").child(f"leaderboard-act{current_act}")
+leaderboard_ref = (
+    db.reference("vitcc").child("owasp").child(f"leaderboard-act{current_act}")
+)
 
 # project_ref = base_ref.child("projects")
 # certificate_ref = base_ref.child("certificates")
@@ -58,6 +61,7 @@ leaderboard_ref = db.reference("vitcc").child("owasp").child(f"leaderboard-act{c
 
 spam_bait_channel_id = getenv("SPAM_BAIT_CHANNEL_ID")
 spam_log_channel_id = getenv("SPAM_LOG_CHANNEL_ID")
+root_users = map(int, getenv("ROOT_USERS").split(","))
 
 command_prefix = "!cyscom" if not debug else "!cyscom-dev"
 
@@ -69,7 +73,7 @@ bot = commands.Bot(
 )
 
 
-cyscom_logo_url = "https://cyscomvit.com/assets/images/logo.png"
+CYSCOM_LOGO_URL = "https://cyscomvit.com/assets/images/logo.png"
 
 
 def embed_generator(
@@ -87,7 +91,7 @@ def embed_generator(
     embed.add_field(name="Rating", value=rating)
     embed.add_field(name="Contributions", value=contributions)
 
-    embed.set_thumbnail(url=cyscom_logo_url)
+    embed.set_thumbnail(url=CYSCOM_LOGO_URL)
 
     return embed
 
@@ -192,7 +196,7 @@ async def add_recruits(ctx):
                 return None
 
         for name in members:
-            await add_data(ctx, name)
+            await add_member(ctx, name)
 
     except Exception as e:
         print(e)
@@ -393,7 +397,7 @@ async def on_message(message):
         )
         embed.add_field(name="Name", value=f"{message.author.id}")
         embed.add_field(name="Message", value=f"{message.content}")
-        embed.set_thumbnail(url=cyscom_logo_url)
+        embed.set_thumbnail(url=CYSCOM_LOGO_URL)
         await ctx.send(embed=embed)
         return
 
@@ -404,6 +408,10 @@ async def on_message(message):
     elif "cyscom website" in message.content.lower():
         await message.channel.send("Our Website is https://cyscomvit.com")
         await bot.process_commands(message)
+
+
+def check_if_root_user(user_id: int | str):
+    return int(user_id) in root_users
 
 
 def add_members_to_act(
