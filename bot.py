@@ -295,8 +295,8 @@ async def contribution(ctx, name, task):
         if data != None:
             for key, value in data.items():
                 if value["Name"].casefold() == name.casefold():
-                    selector = leaderboard_ref.child(key).get()
-
+                    selector = leaderboard_ref.child(key)
+                    ref = selector.get()
                     points_dict = {
                         "pull request": 20,
                         "info": 40,
@@ -320,8 +320,8 @@ async def contribution(ctx, name, task):
                         "promotion large": 50,
                     }
 
-                    rating = selector["Rating"] + points_dict[task.casefold()]
-                    contributions = selector["Contributions"] + 1
+                    rating = ref["Rating"] + points_dict[task.casefold()]
+                    contributions = ref["Contributions"] + 1
 
                     selector.update(
                         {
