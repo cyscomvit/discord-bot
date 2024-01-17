@@ -172,7 +172,8 @@ async def add_member(ctx, name: str, rating: int = 0, contributions: int = 0):
         await ctx.send(embed=embed)
 
     except Exception as e:
-        print(e)
+        ctx.send(e)
+        print(e.__traceback__)
 
 
 @bot.command()
@@ -199,7 +200,8 @@ async def add_recruits(ctx):
             await add_member(ctx, name)
 
     except Exception as e:
-        print(e)
+        ctx.send(e)
+        print(e.__traceback__)
 
 
 @bot.command()
@@ -239,7 +241,8 @@ async def set_points(ctx, name: str, rating=0, contributions=0):
                     await ctx.send(embed=embed)
 
     except Exception as e:
-        print(e)
+        ctx.send(e)
+        print(e.__traceback__)
 
 
 @bot.command()
@@ -279,19 +282,20 @@ async def delete_data(ctx, name):
                     )
                     await ctx.send(embed=embed)
     except Exception as e:
-        print(e)
+        ctx.send(e)
+        print(e.__traceback__)
 
 
 @bot.command()
 @commands.has_any_role("Leaderboard", "Cabinet Member")
 async def contribution(ctx, name, task):
-    """Add contribution to a member"""
+    # """Add contribution to a member"""
     try:
         data = leaderboard_ref.get()
         if data != None:
             for key, value in data.items():
                 if value["Name"].casefold() == name.casefold():
-                    selector = leaderboard_ref.child(key)
+                    selector = leaderboard_ref.child(key).get()
 
                     points_dict = {
                         "pull request": 20,
@@ -334,14 +338,13 @@ async def contribution(ctx, name, task):
                         rating,
                         contributions,
                     )
-
                     await ctx.send(embed=embed)
                     return None
 
         await ctx.send("Name not present")
-
     except Exception as e:
-        print(e)
+        ctx.send(e)
+        print(e.__traceback__)
 
 
 @bot.command()
