@@ -30,7 +30,36 @@ ROOT_USER=handydandyrandy
 
 There are no data types in ENV, have to convert everything from str to required type. Types are just mentioned to give approx idea of what kind of values are expected for each key.
 
-### 2. Run using docker
+### 2. points.json
+
+Number of points for each task. Uses hardcoded values if file absent.
+
+```json
+{
+    "pull request": 20,
+    "info": 40,
+    "blog": 60,
+    "sm posting": 7,
+    "weekly work": 5,
+    "idea": 3,
+    "brochure": 10,
+    "news": 40,
+    "demos": 20,
+    "oc volunteer": 30,
+    "oc assigned": 20,
+    "oc no work": 10,
+    "oc manager": 50,
+    "wtf": 75,
+    "discord": 10,
+    "marketing": 20,
+    "mini project": 100,
+    "complete project": 200,
+    "promotion medium": 25,
+    "promotion large": 50
+}
+```
+
+### 3. Run using docker
 
 ```sh
 docker build -t cyscomvit/discord-bot:latest .

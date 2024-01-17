@@ -29,7 +29,7 @@ def check_if_required_env_variables_are_present():
     }
     if not all(env in environ for env in required_env_variables):
         raise RuntimeError(
-            f"The following required environmental variables have not been set - {list(x for x in required_env_variables if x not in environ)}. Refer to code and Readme.MD for seeing what env keys are needed"
+            f"The following required environmental variables have not been set - {set(x for x in required_env_variables if x not in environ)}. Refer to code and Readme.MD for seeing what env keys are needed"
         )
 
 
@@ -106,7 +106,7 @@ async def ping(ctx):
 
 @bot.command()
 async def doge(ctx):
-    """Return a doge pic"""
+    """Return a doge pic."""
     try:
         doge_pic_url = requests_get(
             "https://shibe.online/api/shibes?count=1&urls=true"
@@ -120,14 +120,14 @@ async def doge(ctx):
 
 @bot.command()
 async def sum(ctx, numOne: int, numTwo: int):
-    f"""Return a sum of 2 numbers. {command_prefix} sum num1 num2"""
+    """Return a sum of 2 numbers. !cyscom sum num1 num2"""
     await ctx.send(numOne + numTwo)
 
 
 @bot.command()
 @commands.has_any_role("Cabinet Member")
 async def add_member(ctx, name: str, rating: int = 0, contributions: int = 0):
-    f"""Add data to the leaderboard. Call it by {command_prefix} add_member "name" rating contribution"""
+    """Add data to the leaderboard. Call it by !cyscom add_member "name" rating contribution"""
     try:
         data = leaderboard_ref.get()
         name = name.strip()
@@ -179,7 +179,8 @@ async def add_member(ctx, name: str, rating: int = 0, contributions: int = 0):
 @bot.command()
 @commands.has_any_role("Cabinet Member")
 async def add_recruits(ctx):
-    f"""Add recruits by reading a members.txt file present in the same folder"""
+    """Add recruits by reading a members.txt file present in the same folder"""
+
     # Place file in discord-bot folder.
     try:
         filename = "members.txt"
@@ -207,7 +208,7 @@ async def add_recruits(ctx):
 @bot.command()
 @commands.has_any_role("Cabinet Member")
 async def set_points(ctx, name: str, rating=0, contributions=0):
-    f"""Specifically set a member's points. Call it by {command_prefix} set_points "name" rating contribution"""
+    """Specifically set a member's points. Call it by !cyscom set_points "name" rating contribution"""
     try:
         data = leaderboard_ref.get()
         name = name.strip()
@@ -248,7 +249,7 @@ async def set_points(ctx, name: str, rating=0, contributions=0):
 @bot.command()
 @commands.has_any_role("Member", "Cabinet Member")
 async def fetch_data(ctx, name):
-    """Fetch data from the leaderboard"""
+    """Fetch data from the leaderboard. !cyscom fetch_data "name\" """
     try:
         data = leaderboard_ref.get()
         if data != None:
@@ -270,7 +271,7 @@ async def fetch_data(ctx, name):
 @bot.command()
 @commands.has_any_role("Cabinet Member")
 async def delete_data(ctx, name):
-    """Delete someone from the leaderboard"""
+    """Delete someone from the leaderboard. !cyscom delete_data "name\" """
     try:
         data = leaderboard_ref.get()
         if data != None:
@@ -329,7 +330,7 @@ def fetch_points_for_each_task() -> dict[str, int]:
 @bot.command()
 @commands.has_any_role("Leaderboard", "Cabinet Member")
 async def contribution(ctx, name, task):
-    # """Add contribution to a member"""
+    """Add contribution to a member. !cyscom contribution "name" "task\""""
     try:
         data = leaderboard_ref.get()
         if data != None:
@@ -368,6 +369,7 @@ async def contribution(ctx, name, task):
 @bot.command()
 @commands.has_any_role("Member", "Cabinet Member")
 async def attendance(ctx, channel_name):
+    """Attendance in a voice channel. !cyscom attendance "channel name\""""
     f"""Mark attendance in a voice channel. Call by {command_prefix} attendance voice_channel_name"""
 
     # Get the voice channel by name

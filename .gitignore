@@ -1,3 +1,6 @@
+# Don't ignore these files
+!points.json
+
 testing.py
 Pipfile
 Pipfile.lock
@@ -10,10 +13,6 @@ Pipfile.lock
 *.db
 
 members.txt
-
-# Don't ignore these files
-!points.json
-
 
 __pycache__/
 .mypy_cache/
