@@ -1,12 +1,12 @@
-from distutils.command.check import check
+from json import load as json_load
 from os import environ, getenv, listdir
 from os.path import dirname
-from requests import get as requests_get
 
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 from firebase_admin import credentials, db, initialize_app
+from requests import get as requests_get
 
 # Read environment variables set at ./.env
 if not load_dotenv(f"{dirname(__file__)}/.env"):
@@ -286,6 +286,46 @@ async def delete_data(ctx, name):
         print(e.__traceback__)
 
 
+def fetch_points_for_each_task() -> dict[str, int]:
+    """
+    Reads file at `points.json` to understand how many points to give for each task. If file is absent or error comes up, uses hardcoded values
+    """
+    try:
+        with open(f"{dirname(__file__)}/points.json") as f:
+            points_dict: dict[str, int] = json_load(f)
+            if not isinstance(points_dict, dict) or not points_dict:
+                raise ValueError
+
+    except (FileNotFoundError, ValueError) as e:
+        print(
+            f"Could not read points.json in current directory so using hardcoded points. Error - {e}"
+        )
+        points_dict = {
+            "pull request": 20,
+            "info": 40,
+            "blog": 60,
+            "sm posting": 7,
+            "weekly work": 5,
+            "idea": 3,
+            "brochure": 10,
+            "news": 40,
+            "demos": 20,
+            "oc volunteer": 30,
+            "oc assigned": 20,
+            "oc no work": 10,
+            "oc manager": 50,
+            "wtf": 75,
+            "discord": 10,
+            "marketing": 20,
+            "mini project": 100,
+            "complete project": 200,
+            "promotion medium": 25,
+            "promotion large": 50,
+        }
+
+    return points_dict
+
+
 @bot.command()
 @commands.has_any_role("Leaderboard", "Cabinet Member")
 async def contribution(ctx, name, task):
@@ -297,28 +337,6 @@ async def contribution(ctx, name, task):
                 if value["Name"].casefold() == name.casefold():
                     selector = leaderboard_ref.child(key)
                     ref = selector.get()
-                    points_dict = {
-                        "pull request": 20,
-                        "info": 40,
-                        "blog": 60,
-                        "sm posting": 7,
-                        "weekly work": 5,
-                        "idea": 3,
-                        "brochure": 10,
-                        "news": 40,
-                        "demos": 20,
-                        "oc volunteer": 30,
-                        "oc assigned": 20,
-                        "oc no work": 10,
-                        "oc manager": 50,
-                        "wtf": 75,
-                        "discord": 10,
-                        "marketing": 20,
-                        "mini project": 100,
-                        "complete project": 200,
-                        "promotion medium": 25,
-                        "promotion large": 50,
-                    }
 
                     rating = ref["Rating"] + points_dict[task.casefold()]
                     contributions = ref["Contributions"] + 1
@@ -430,4 +448,8 @@ def fetch_spreadsheet(speadsheet_id: str):
     ...
 
 
+# Fetch points for each task
+points_dict: dict[str, int] = fetch_points_for_each_task()
+
+# Run the bot
 bot.run(getenv("BOT_TOKEN"))
