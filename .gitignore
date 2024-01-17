@@ -8,7 +8,12 @@ Pipfile.lock
 *.csv
 *.json
 *.db
+
 members.txt
+
+# Don't ignore these files
+!points.json
+
 
 __pycache__/
 .mypy_cache/
