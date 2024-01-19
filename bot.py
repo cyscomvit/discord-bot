@@ -301,30 +301,7 @@ def fetch_points_for_each_task() -> dict[str, int]:
         print(
             f"Could not read points.json in current directory so using hardcoded points. Error - {e}"
         )
-        points_dict = {
-            "pull request": 20,
-            "info": 40,
-            "blog": 60,
-            "sm posting": 15,
-            "caption": 5,
-            "subordinate": 20,
-            "weekly work": 5,
-            "idea": 3,
-            "brochure": 10,
-            "news": 40,
-            "demos": 20,
-            "oc volunteer": 30,
-            "oc assigned": 20,
-            "oc no work": 10,
-            "oc manager": 50,
-            "wtf": 75,
-            "discord": 10,
-            "marketing": 20,
-            "mini project": 100,
-            "complete project": 200,
-            "promotion medium": 25,
-            "promotion large": 50,
-        }
+        exit()
 
     return points_dict
 
