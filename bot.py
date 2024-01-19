@@ -296,20 +296,21 @@ def fetch_points_for_each_task() -> dict[str, int]:
             points_dict: dict[str, int] = json_load(f)
             if not isinstance(points_dict, dict) or not points_dict:
                 raise ValueError
+            return points_dict
 
     except (FileNotFoundError, ValueError) as e:
         print(
-            f"Could not read points.json in current directory so using hardcoded points. Error - {e}"
+            f"Could not read points.json in current directory. Error - {type(e)} {e}"
         )
-        exit()
+    
+    exit()
 
-    return points_dict
 
 
 @bot.command()
 @commands.has_any_role("Leaderboard", "Cabinet Member")
 async def contribution(ctx, name, task):
-    """Add contribution to a member. !cyscom contribution "name" "task\""""
+    """Add contribution to a member. !cyscom contribution "name" "task\" """
     try:
         data = leaderboard_ref.get()
         if data != None:
@@ -348,7 +349,7 @@ async def contribution(ctx, name, task):
 @bot.command()
 @commands.has_any_role("Member", "Cabinet Member")
 async def attendance(ctx, channel_name):
-    """Attendance in a voice channel. !cyscom attendance "channel name\""""
+    """Attendance in a voice channel. !cyscom attendance "channel name\" """
     f"""Mark attendance in a voice channel. Call by {command_prefix} attendance voice_channel_name"""
 
     # Get the voice channel by name
