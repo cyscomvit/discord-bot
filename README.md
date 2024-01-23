@@ -32,7 +32,7 @@ There are no data types in ENV, have to convert everything from str to required 
 
 ### 2. points.json
 
-Number of points for each task. Uses hardcoded values if file absent.
+Number of points for each task. File must be present in same directory as `bot.py`.
 
 ```json
 {
