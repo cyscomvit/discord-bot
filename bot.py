@@ -99,7 +99,7 @@ def embed_generator(
 @bot.command()
 async def ping(ctx):
     """Check to see if bot is working. Also returns path of the script"""
-    msg = f"pong from bot running at {dirname(__file__)}"
+    msg = f"I'm alive! {ctx.message.author.mention} 🤗"
     print(msg)
     await ctx.send(msg)
 
@@ -432,6 +432,13 @@ def fetch_spreadsheet(speadsheet_id: str):
 
 # Fetch points for each task
 points_dict: dict[str, int] = fetch_points_for_each_task()
+
+# send this points list as message if the command is !cyscom points
+
+@bot.command()
+@commands.has_any_role("Cabinet Member")
+async def points(ctx):
+    await ctx.send(points_dict)
 
 # Run the bot
 bot.run(getenv("BOT_TOKEN"))
