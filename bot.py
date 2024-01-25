@@ -99,7 +99,7 @@ def embed_generator(
 @bot.command()
 async def ping(ctx):
     """Check to see if bot is working. Also returns path of the script"""
-    msg = f"I'm alive! {ctx.message.author.mention} 🤗"
+    msg = f"I'm alive!"
     print(msg)
     await ctx.send(msg)
 
@@ -439,6 +439,7 @@ points_dict: dict[str, int] = fetch_points_for_each_task()
 @commands.has_any_role("Cabinet Member")
 async def points(ctx):
     formatted_points = "\n".join([f"{task} - {points}" for task, points in points_dict.items()])
+    await ctx.send(f"```{formatted_points}```")
 
 # Run the bot
 bot.run(getenv("BOT_TOKEN"))
