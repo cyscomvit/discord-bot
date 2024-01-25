@@ -438,7 +438,7 @@ points_dict: dict[str, int] = fetch_points_for_each_task()
 @bot.command()
 @commands.has_any_role("Cabinet Member")
 async def points(ctx):
-    await ctx.send(points_dict)
+    formatted_points = "\n".join([f"{task} - {points}" for task, points in points_dict.items()])
 
 # Run the bot
 bot.run(getenv("BOT_TOKEN"))
