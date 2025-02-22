@@ -2,7 +2,7 @@ FROM python:3.11-slim AS requirements-image
 
 ENV PYTHONUNBUFFERED=1
 
-RUN ["pip","install","poetry>=1.8,<1.9"]
+RUN ["pip","install","poetry>=2.0.0,<3.0.0"]
 
 RUN ["poetry","self","add","poetry-plugin-export"]
 
